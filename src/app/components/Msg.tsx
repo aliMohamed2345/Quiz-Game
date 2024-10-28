@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { questionCounter } from './Main';
 import { initialContentData } from '../question/[questionId]/page';
 import { CategoryId } from '../functions/categoryEnum';
-import {  useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 
 interface MsgProps {
     IsCorrectAnswer: boolean;
@@ -26,46 +26,28 @@ function GetTheTopicID(CategoryId: object, Topic: string | null): number {
 export function Msg({ IsCorrectAnswer, Score, Hints, Difficulty, Topic, QuestionNumber, }: MsgProps) {
     const nextQuestion = IsCorrectAnswer ? QuestionNumber + 1 : QuestionNumber;
     console.log(IsCorrectAnswer, Score, Hints, Difficulty, Topic, nextQuestion);
-    const [data, SetData] = useState(initialContentData);
-    useEffect(() => {
-        setTimeout(() => {
-            fetch(`https://opentdb.com/api.php?amount=1&difficulty=${Difficulty}&type=multiple&category=${GetTheTopicID(CategoryId, Topic)}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.results.length > 0) {
-                        const { question, correct_answer, incorrect_answers } = data.results[0];
-                        SetData({
-                            ...initialContentData,
-                            QuestionContent: question,
-                            correct_answers: correct_answer,
-                            incorrect_answers: incorrect_answers,
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Fetching data failed:', error);
-                });
-        }, 2000);
-    }, [Difficulty, Topic, Hints, nextQuestion, Score]);
+    // const [data, SetData] = useState(initialContentData);
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         fetch(`https://opentdb.com/api.php?amount=1&difficulty=${Difficulty}&type=multiple&category=${GetTheTopicID(CategoryId, Topic)}`)
+    //             .then(res => res.json())
+    //             .then(data => {
+    //                 if (data.results.length > 0) {
+    //                     const { question, correct_answer, incorrect_answers } = data.results[0];
+    //                     SetData({
+    //                         ...initialContentData,
+    //                         QuestionContent: question,
+    //                         correct_answers: correct_answer,
+    //                         incorrect_answers: incorrect_answers,
+    //                     });
+    //                 }
+    //             })
+    //             .catch(error => {
+    //                 console.error('Fetching data failed:', error);
+    //             });
+    //     }, 2000);
+    // }, [Difficulty, Topic, Hints, nextQuestion, Score]);
 
-    // Prepare the query object
-    // const Query = {
-    // QuestionContent: data.QuestionContent,
-    // QuestionNumber: QuestionNumber,
-    // Hints: Hints,
-    // correctAnswer: data.correct_answers,
-    // IncorrectAnswers: d/ata.incorrect_answers,
-    // Difficulty: Difficulty,
-    // Topic: Topic,
-    // };
-    // const handleNextQuestion = (e:any) => {
-    //     e.preventDefault();
-    //     router.reload(); // Refresh the current page
-    //     router.push({
-    //         pathname: `/question/${nextQuestion}`,
-    //         query: { Difficulty, Topic, Hints, Score },
-    //     }); // Then navigate to the next question
-    // };
     return (
         <>
             {IsCorrectAnswer ? (
@@ -78,17 +60,10 @@ export function Msg({ IsCorrectAnswer, Score, Hints, Difficulty, Topic, Question
                         <p className="fs-5 text-white m-4 mb-5 fs-sm-6">Score: {Score}</p>
                         <div className=" gap-2 ">
                             <Link href="/" className="rounded-pill text-white text-decoration-none  p-3 bg-danger   ">Go To Home</Link>
-                            {/* <Link href={{
+                            <Link href={{
                                 pathname: `/question/${nextQuestion}`,
                                 query: { Difficulty: Difficulty, Topic: Topic, Hints: Hints, Score: Score }
-                            }} className="rounded-pill text-white text-decoration-none  p-3 bg-success ms-5">Next Question</Link> */}
-                            <a
-                                href={`/question/${nextQuestion}?Difficulty=${Difficulty}&Topic=${Topic}&Hints=${Hints}&Score=${Score}`}
-                                className="rounded-pill text-white text-decoration-none p-3 bg-success ms-5"
-                                // onClick={(e) => handleNextQuestion(e)}
-                            >
-                                Next Question
-                            </a>
+                            }} className="rounded-pill text-white text-decoration-none  p-3 bg-success ms-5">Next Question</Link>
                         </div>
                     </div>
                 </>
@@ -102,7 +77,8 @@ export function Msg({ IsCorrectAnswer, Score, Hints, Difficulty, Topic, Question
                     <Link href="/" className="rounded-pill text-white text-decoration-none col-10 p-3 bg-danger">Go To Home</Link>
                 </div>
             </>
-            )}
+            )
+            }
         </>
     );
 }

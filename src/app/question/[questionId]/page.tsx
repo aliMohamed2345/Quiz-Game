@@ -39,7 +39,7 @@ function Question() {
     }
     useEffect(() => {
         setTimeout(() => {
-            fetch(`https://opentdb.com/api.php?amount=1&difficulty=${Difficulty}&type=multiple&category=${GetTheTopicID(CategoryId, Topic)}`)
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}?amount=1&difficulty=${Difficulty}&type=multiple&category=${GetTheTopicID(CategoryId, Topic)}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.results.length > 0) {
