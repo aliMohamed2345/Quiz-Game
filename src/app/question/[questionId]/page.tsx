@@ -1,10 +1,10 @@
 "use client"
 import QuestionStructure from '@/app/components/QuestionStructure'
-import Loading from '@/app/Loading';
 import { useEffect, useState } from 'react'
 import { CategoryId } from '@/app/functions/categoryEnum';
 import { useParams, useSearchParams } from 'next/navigation'
-
+import { useDispatch } from 'react-redux';
+import { SetDifficulty, SetIsLoading, SetCorrectAnswer, SetTopic, SetScore, SetIncorrectAnswers, SetHints, SetQuestionNumber, SetQuestionContent } from '@/app/redux/Slices/QuestionStructureSlice';
 export interface DataProps {
     QuestionContent: string;
     options: string[];
@@ -20,7 +20,8 @@ export let initialContentData: DataProps = {
 }
 
 function Question() {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    let dispatch = useDispatch();
+    // const [isLoading, setIsLoading] = useState<boolean>(true);
     const [data, setData] = useState<DataProps>(initialContentData);
     let currentPage = useParams().questionId
     const router = useSearchParams();
@@ -37,12 +38,13 @@ function Question() {
         }
         return -1;
     }
+
     useEffect(() => {
         setTimeout(() => {
-            fetch(`${process.env.NEXT_PUBLIC_API_URL}?amount=1&difficulty=${Difficulty}&type=multiple&category=${GetTheTopicID(CategoryId, Topic)}`)
+            fetch(`${process.env.NEXT_PUBLIC_QUIZ_GAME_API}?amount=1&difficulty=${Difficulty}&type=multiple&category=${GetTheTopicID(CategoryId, Topic)}`)
                 .then(res => res.json())
                 .then(data => {
-                    if (data.results.length > 0) {
+                    if (data.results?.length > 0) {
                         const { question, correct_answer, incorrect_answers } = data.results[0];
                         setData({
                             ...initialContentData,
@@ -51,33 +53,27 @@ function Question() {
                             incorrect_answers: [...incorrect_answers]
                         });
                     }
-                    setIsLoading(false);
+                    // setIsLoading(false);
+                    dispatch(SetIsLoading(false))
                 })
                 .catch(error => {
                     console.error('Fetching data failed:', error);
-                    setIsLoading(false);
+                    dispatch(SetIsLoading(false));
                 });
         }, 2000);
     }, [Difficulty, Topic, Hints, currentPage, Score]);
-
-    return (
-        <>
-            {isLoading ? (
-                <Loading />
-            ) : (
-                <QuestionStructure
-                    QuestionNumber={+currentPage}
-                    Score={+Score}
-                    Hints={+Hints}
-                    Topic={Topic}
-                    Difficulty={Difficulty}
-                    QuestionContent={data.QuestionContent}
-                    correctAnswer={data.correct_answers}
-                    IncorrectAnswers={data.incorrect_answers}
-                />
-            )}
-        </>
-    );
+    //dispatching the data to store  
+    useEffect(() => {
+        dispatch(SetDifficulty(Difficulty))
+        dispatch(SetQuestionNumber(+currentPage!))
+        dispatch(SetQuestionContent(data.QuestionContent))
+        dispatch(SetScore(+Score))
+        dispatch(SetTopic(Topic))
+        dispatch(SetIncorrectAnswers(data.incorrect_answers))
+        dispatch(SetCorrectAnswer(data.correct_answers))
+        dispatch(SetHints(+Hints))
+    }, [Difficulty, currentPage, Score, Topic, data])
+    return (<QuestionStructure />);
 }
 
 export default Question;

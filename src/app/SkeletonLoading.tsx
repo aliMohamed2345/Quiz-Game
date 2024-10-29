@@ -2,12 +2,12 @@ interface LoadingProps {
     Width?: string,
     Height?: string
 }
-function Loading({ Width = "2.5rem", Height = Width }: LoadingProps) {
+function SkeletonLoading({ Width = "2.5rem", Height = Width }: LoadingProps) {
     return (<>
 
 
         <div
-            className="d-flex justify-content-center align-items-center  "
+            className="d-flex justify-content-center align-items-center position-absolute translate-middle mx-auto translate-middle-x top-50   "
         >
             <div
                 className="spinner-border text-primary loading-spinner spinner-border-lg d-block "
@@ -19,4 +19,4 @@ function Loading({ Width = "2.5rem", Height = Width }: LoadingProps) {
         </div>
     </>)
 }
-export default Loading;
+export default SkeletonLoading;

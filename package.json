@@ -1,11 +1,19 @@
 {
   "dependencies": {
-    "bootstrap": "^5.3.3"
+    "@reduxjs/toolkit": "^2.3.0",
+    "bootstrap": "^5.3.3",
+    "next": "^15.0.1",
+    "react-redux": "^9.1.2"
   },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
+  },
+  "devDependencies": {
+    "@types/node": "^22.8.2",
+    "@types/react": "^18.3.12",
+    "typescript": "5.6.3"
   }
 }

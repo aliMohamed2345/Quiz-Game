@@ -1,18 +1,7 @@
 //interfaces 
-export interface QuestionProps {
-    QuestionNumber: number;
-    QuestionContent: string;
-    Score: number | null;
-    Hints?: number;
-    correctAnswer: string;
-    IncorrectAnswers: string[];
-    Difficulty?: string,
-    Topic?: string
-}
 export interface ShowMsgProps {
     show: boolean,
     isCorrect: boolean
-    Score: number
 }
 export interface HintsProps {
     Hints: number
